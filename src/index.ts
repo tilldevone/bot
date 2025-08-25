@@ -85,7 +85,7 @@ var debug_mode: Boolean = (envv.parsed.DEBUG === 'true') ? true : false;
 //     });
 // });
 
-const bot = new Telegraf("2019283473:AAFe_aV5VeqD27P34rqcwnboEF5hrtrZa9o");
+const bot = new Telegraf("2019283473:AAF9MbS_OwiDl_sMhNt-JlbvfAI5mcesOFA");
 
 const vk = new VK({
     token: '503f374b503f374b503f374b5b530a7cb45503f503f374b3841340dfc1a797e4acbf43a',
