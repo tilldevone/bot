@@ -26,6 +26,12 @@ const envv = env.config({ path: path.resolve(__dirname, '../.env') });
 console.log('Environment variables loaded:', envv.parsed.DEBUG);
 var debug_mode: Boolean = (envv.parsed.DEBUG === 'true') ? true : false;
 
+var VK_TOKEN: string = envv.parsed.VK_TOKEN || "503f374b503f374b503f374b5b530a7cb45503f503f374b3841340dfc1a797e4acbf43a";
+var TG_TOKEN: string = envv.parsed.TG_TOKEN || "2019283473:AAF9MbS_OwiDl_sMhNt-JlbvfAI5mcesOFA";
+
+debug_log("VK_TOKEN: " + VK_TOKEN, "MAIN");
+debug_log("TG_TOKEN: " + TG_TOKEN, "MAIN");
+
 // var db: Database = new Database('./db/bot.db', (err) => {
 //     if (err) {
 //         console.error('Error opening database:', err.message);
@@ -85,10 +91,10 @@ var debug_mode: Boolean = (envv.parsed.DEBUG === 'true') ? true : false;
 //     });
 // });
 
-const bot = new Telegraf("2019283473:AAF9MbS_OwiDl_sMhNt-JlbvfAI5mcesOFA");
+const bot = new Telegraf(TG_TOKEN);
 
 const vk = new VK({
-    token: '503f374b503f374b503f374b5b530a7cb45503f503f374b3841340dfc1a797e4acbf43a',
+    token: VK_TOKEN,
     apiVersion: '5.199',
     language: 'ru',
 });
@@ -120,8 +126,8 @@ function debug_log(data: any, from: string! ) {
         console.log("\n\n");
         console.log(' >> DEBUG LOG: ');
         console.log(' >> From: ', from);
-        console.log(data);
-        console.log(" END OF DEBUG LOG \n\n");
+        console.log(" >>", data);
+        console.log(" >> END OF DEBUG LOG \n\n");
     }
 }
 
@@ -362,7 +368,7 @@ bot.on(message('photo'), async (ctx) => {
         const photo = ctx.message.photo[ctx.message.photo.length - 1];
         const fileId = photo.file_id;
         const fileInfo = await ctx.telegram.getFile(fileId);
-            const fileUrl = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN || "2019283473:AAFe_aV5VeqD27P34rqcwnboEF5hrtrZa9o"}/${fileInfo.file_path}`;
+            const fileUrl = `https://api.telegram.org/file/bot${TG_TOKEN}/${fileInfo.file_path}`;
             const destPath = path.join('./img', `${fileId}.jpg`);
             const https = require('https');
             const file = fs.createWriteStream(destPath);
@@ -388,7 +394,7 @@ bot.on(message('video'), async (ctx) => {
         const photo = ctx.message.video;
         const fileId = photo.file_id;
         const fileInfo = await ctx.telegram.getFile(fileId);
-            const fileUrl = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN || "2019283473:AAFe_aV5VeqD27P34rqcwnboEF5hrtrZa9o"}/${fileInfo.file_path}`;
+            const fileUrl = `https://api.telegram.org/file/bot${TG_TOKEN}/${fileInfo.file_path}`;
             const destPath = path.join('./vid', `${photo.file_name}`);
             const https = require('https');
             const file = fs.createWriteStream(destPath);
