@@ -9,7 +9,10 @@ services:
     environment:
       - TZ=Europe/Moscow
     volumes:
-      - ./:/opt/bott
+      - ./src:/opt/bott/src
+      - ./package.json:/opt/bott/package.json
+      - ./tsconfig.json:/opt/bott/tsconfig.json
+      - ./img:/opt/bott/img
+      - ./vid:/opt/bott/vid
     working_dir: /opt/bott
-    command: /bin/bash -c "npm install -D && npm run dev"
-    restart: always
+    command: /bin/bash -c "apt update && apt install -y npm nodejs node-gyp ts-node && npm install -D && npm run dev"

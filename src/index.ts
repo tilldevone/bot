@@ -1,5 +1,5 @@
 
-import { Telegraf } from 'telegraf'
+import { Input, Telegraf } from 'telegraf'
 import { Airgram } from 'Airgram';
 import { Database, sqlite3 } from 'sqlite3';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,6 +15,9 @@ import { VK } from 'vk-io';
 import { VKOptions } from 'vk-io/types';
 import { runInContext } from 'vm';
 import { stringify } from 'querystring';
+import { InputType } from 'zlib';
+import { rm } from 'fs/promises';
+
 
 
 require('dotenv').config();
@@ -83,7 +86,7 @@ var debug_mode = process.env.DEBUG || false;
 //     });
 // });
 
-const bot = new Telegraf("2019283473:AAFe_aV5VeqD27P34rqcwnboEF5hrtrZa9o");
+const bot = new Telegraf("2019283473:AAF9MbS_OwiDl_sMhNt-JlbvfAI5mcesOFA");
 
 const vk = new VK({
     token: '503f374b503f374b503f374b5b530a7cb45503f503f374b3841340dfc1a797e4acbf43a',
@@ -122,18 +125,18 @@ async function run(): Promise<string> {
             res += "   [ ::: VK ::: " + response[0]['first_name'] + ' ' + response[0]['last_name'] + "](https://vk.com/id" + response[0]['id'] + ") с " + resolve_dev(response[0]["last_seen"]['platform']) + " ";
             res += `\n   ${response[0]['online'] ? 'Online' : 'Offline'} `;
             res += `\n   ${format(new Date((response[0].last_seen.time * 1000 - 7200)), 'dd MMMM yyyy в HH:mm',{ locale: ru })} `;
-            if (hist.friends !== (response[0]['followers_count'] - response[0]['counters']['followers'])) res += `\n   ${response[0]['followers_count'] - response[0]['counters']['followers'] - hist.friends} новых друзей `;
-            if (hist.groups !== response[0]['counters']['pages']) res += `\n   ${response[0]['counters']['pages'] - hist.groups} новых групп `;
-            if (hist.followers !== response[0]['counters']['followers']) res += `\n   ${response[0]['counters']['followers'] - hist.followers} новых подписчиков `;
-            if (hist.subscriptions !== response[0]['counters']['subscriptions']) res += `\n   ${response[0]['counters']['subscriptions'] - hist.subscriptions} новых подписок `;
-            if (hist.photos !== response[0]['counters']['photos']) res += `\n   ${response[0]['counters']['photos'] - hist.photos} новых фотографий `;
+            //if (hist.friends !== (response[0]['followers_count'] - response[0]['counters']['followers'])) res += `\n   ${response[0]['followers_count'] - response[0]['counters']['followers'] - hist.friends} новых друзей `;
+            //if (hist.groups !== response[0]['counters']['pages']) res += `\n   ${response[0]['counters']['pages'] - hist.groups} новых групп `;
+            //if (hist.followers !== response[0]['counters']['followers']) res += `\n   ${response[0]['counters']['followers'] - hist.followers} новых подписчиков `;
+            //if (hist.subscriptions !== response[0]['counters']['subscriptions']) res += `\n   ${response[0]['counters']['subscriptions'] - hist.subscriptions} новых подписок `;
+            //if (hist.photos !== response[0]['counters']['photos']) res += `\n   ${response[0]['counters']['photos'] - hist.photos} новых фотографий `;
 
-            hist.friends = (response[0]['followers_count'] - response[0]['counters']['followers']);
-            hist.groups = response[0]['counters']['pages'];
-            hist.followers = response[0]['counters']['followers'];
-            hist.subscriptions = response[0]['counters']['subscriptions'];
-            hist.photos = response[0]['counters']['photos'];
-            hist.videos = response[0]['counters']['videos'];
+            //hist.friends = (response[0]['followers_count'] - response[0]['counters']['followers']);
+            //hist.groups = response[0]['counters']['pages'];
+            //hist.followers = response[0]['counters']['followers'];
+            //hist.subscriptions = response[0]['counters']['subscriptions'];
+            //hist.photos = response[0]['counters']['photos'];
+            //hist.videos = response[0]['counters']['videos'];
             console.log(hist);
     //     db.run(`INSERT OR REPLACE INTO users (user_id, friends, groups, followers, subscriptions, photos, videos, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     //         [response[0]['id'], (response[0]['followers_count'] - response[0]['counters']['followers']), response[0]['counters']['pages'], response[0]['counters']['followers'], response[0]['counters']['subscriptions'], response[0]['counters']['photos'], response[0]['counters']['videos'], new Date()],
@@ -208,6 +211,25 @@ function filesarray(path: string) {
 }
 
 var step = 0;
+
+bot.command('aaaa', async (ctx) => {
+    fs.rm('./img/mega.jpg', () => {
+        var msgid = ctx.message.message_id;
+        ctx.deleteMessage(msgid);
+    })
+})
+
+bot.command('aaa', async (ctx) => {
+    var msgid = 0
+    var cmdmsgid = ctx.message.message_id;
+    msgid = (await ctx.sendPhoto(Input.fromLocalFile('./img/mega.jpg'))).message_id;
+    setTimeout(() => {
+        ctx.deleteMessage(msgid);
+        ctx.deleteMessage(cmdmsgid);
+    }, 3000);
+    
+})
+
 
 bot.command('status', async (ctx) => {
  run().then((res) => {
